@@ -4,60 +4,54 @@
   <meta charset="UTF-8">
   <title>NIFTY / BANKNIFTY Live Chart</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
   <style>
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
       background: #0f172a;
       color: white;
+      font-family: Arial, sans-serif;
       text-align: center;
     }
-
     h2 {
-      margin: 10px 0;
-    }
-
-    select {
-      padding: 8px;
-      margin-bottom: 10px;
-      font-size: 16px;
-    }
-
-    iframe {
-      width: 100%;
-      height: 500px;
-      border: none;
+      margin: 10px;
     }
   </style>
 </head>
-
 <body>
 
 <h2>📊 NIFTY / BANKNIFTY LIVE CHART</h2>
 
-<select onchange="changeChart(this.value)">
-  <option value="NSE:NIFTY">NIFTY</option>
-  <option value="NSE:BANKNIFTY">BANKNIFTY</option>
-</select>
+<!-- TradingView Widget BEGIN -->
+<div class="tradingview-widget-container">
+  <div class="tradingview-widget-container__widget"></div>
 
-<iframe
-  id="tvchart"
-  src="https://www.tradingview.com/widgetembed/?symbol=NSE:NIFTY&interval=5&theme=dark&style=1&timezone=Asia/Kolkata"
-  allowfullscreen>
-</iframe>
-
-<script>
-function changeChart(symbol) {
-  document.getElementById("tvchart").src =
-    "https://www.tradingview.com/widgetembed/?" +
-    "symbol=" + symbol +
-    "&interval=5" +
-    "&theme=dark" +
-    "&style=1" +
-    "&timezone=Asia/Kolkata";
-}
-</script>
+  <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" async>
+  {
+    "symbols": [
+      ["NSE:NIFTY|5"],
+      ["NSE:BANKNIFTY|5"]
+    ],
+    "chartOnly": false,
+    "width": "100%",
+    "height": "500",
+    "locale": "en",
+    "colorTheme": "dark",
+    "autosize": true,
+    "showVolume": true,
+    "showMA": true,
+    "hideDateRanges": false,
+    "hideMarketStatus": false,
+    "hideSymbolLogo": false,
+    "scalePosition": "right",
+    "scaleMode": "Normal",
+    "fontFamily": "Arial",
+    "noTimeScale": false,
+    "valuesTracking": "1",
+    "chartType": "area"
+  }
+  </script>
+</div>
+<!-- TradingView Widget END -->
 
 </body>
 </html>
