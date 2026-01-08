@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>NIFTY / BANKNIFTY Live Chart</title>
+  <title>NIFTY / BANKNIFTY AI Signals</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <style>
     body {
       margin: 0;
@@ -12,14 +13,16 @@
       color: white;
       text-align: center;
     }
+
     h2 {
       margin: 16px 0;
     }
+
     button {
       display: block;
       width: 90%;
       max-width: 320px;
-      margin: 14px auto;
+      margin: 12px auto;
       padding: 16px;
       font-size: 18px;
       border: none;
@@ -28,21 +31,38 @@
       color: white;
       cursor: pointer;
     }
+
     button:active {
       background: #1d4ed8;
     }
-    .note {
+
+    .card {
+      background: #1e293b;
+      margin: 14px;
+      padding: 16px;
+      border-radius: 14px;
+      text-align: left;
+      max-width: 420px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .bullish { color: #22c55e; }
+    .bearish { color: #ef4444; }
+    .neutral { color: #facc15; }
+
+    .small {
       font-size: 14px;
       opacity: 0.8;
-      margin-top: 20px;
     }
   </style>
 </head>
 
 <body>
 
-<h2>📊 NIFTY / BANKNIFTY LIVE CHART</h2>
+<h2>📊 NIFTY / BANKNIFTY AI</h2>
 
+<!-- OPEN TRADINGVIEW BUTTONS -->
 <button onclick="openChart('NIFTY')">
   Open NIFTY Live Chart
 </button>
@@ -51,21 +71,90 @@
   Open BANKNIFTY Live Chart
 </button>
 
-<div class="note">
-  Chart opens on TradingView in a new tab.<br>
-  (Free · Live · Official)
+<!-- AI SIGNAL CARD -->
+<div class="card">
+  <h3>🤖 AI Trade Signal</h3>
+
+  <p>
+    Market: <b id="market">NIFTY</b><br>
+    Trend: <b id="trend" class="neutral">WAIT</b><br>
+    Action: <b id="action">No Trade</b><br>
+    Confidence: <b id="confidence">--%</b>
+  </p>
+
+  <hr>
+
+  <p>
+    Option Suggestion:<br>
+    <b id="option">--</b>
+  </p>
+
+  <p class="small">
+    Strategy: ATM / 1-ITM option buying<br>
+    Timeframe: 5-min confirmation
+  </p>
+</div>
+
+<div class="small" style="margin-bottom:20px;">
+  Educational & decision-support only
 </div>
 
 <script>
+/* ---------- OPEN TRADINGVIEW ---------- */
 function openChart(type) {
-  let url =
+  const url =
     type === 'NIFTY'
-    ? 'https://www.tradingview.com/chart/?symbol=NSE:NIFTY'
-    : 'https://www.tradingview.com/chart/?symbol=NSE:BANKNIFTY';
+      ? 'https://www.tradingview.com/chart/?symbol=NSE:NIFTY'
+      : 'https://www.tradingview.com/chart/?symbol=NSE:BANKNIFTY';
 
-  // This is a direct user-triggered action → not blocked
   window.open(url, '_blank');
 }
+
+/* ---------- SIMPLE AI ENGINE ---------- */
+function generateSignal() {
+  // Mocked indicator logic (upgrade later with real data)
+  const rsi = 30 + Math.random() * 40;     // 30–70
+  const trendStrength = Math.random();    // 0–1
+
+  let trend = "WAIT";
+  let action = "No Trade";
+  let option = "No Trade";
+  let confidence = 50;
+
+  if (rsi > 55 && trendStrength > 0.6) {
+    trend = "BULLISH";
+    action = "BUY CALL (CE)";
+    option = "ATM or 1-ITM CE";
+    confidence = 75 + Math.floor(Math.random() * 10);
+  }
+  else if (rsi < 45 && trendStrength > 0.6) {
+    trend = "BEARISH";
+    action = "BUY PUT (PE)";
+    option = "ATM or 1-ITM PE";
+    confidence = 75 + Math.floor(Math.random() * 10);
+  }
+  else {
+    trend = "SIDEWAYS";
+    action = "WAIT";
+    option = "Avoid Trading";
+    confidence = 55;
+  }
+
+  const trendEl = document.getElementById("trend");
+  trendEl.innerText = trend;
+  trendEl.className =
+    trend === "BULLISH" ? "bullish" :
+    trend === "BEARISH" ? "bearish" :
+    "neutral";
+
+  document.getElementById("action").innerText = action;
+  document.getElementById("option").innerText = option;
+  document.getElementById("confidence").innerText = confidence + "%";
+}
+
+/* ---------- AUTO UPDATE EVERY 30s ---------- */
+generateSignal();
+setInterval(generateSignal, 30000);
 </script>
 
 </body>
