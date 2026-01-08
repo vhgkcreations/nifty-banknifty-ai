@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <title>NIFTY / BANKNIFTY Live Chart</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <style>
     body {
       margin: 0;
@@ -13,31 +12,29 @@
       color: white;
       text-align: center;
     }
-
     h2 {
-      margin: 15px 0;
+      margin: 16px 0;
     }
-
-    .btn {
-      display: inline-block;
-      margin: 12px;
-      padding: 14px 24px;
+    button {
+      display: block;
+      width: 90%;
+      max-width: 320px;
+      margin: 14px auto;
+      padding: 16px;
       font-size: 18px;
+      border: none;
+      border-radius: 12px;
       background: #2563eb;
       color: white;
-      text-decoration: none;
-      border-radius: 10px;
+      cursor: pointer;
     }
-
-    .btn:hover {
+    button:active {
       background: #1d4ed8;
     }
-
-    .card {
-      background: #1e293b;
-      padding: 15px;
-      margin: 15px;
-      border-radius: 12px;
+    .note {
+      font-size: 14px;
+      opacity: 0.8;
+      margin-top: 20px;
     }
   </style>
 </head>
@@ -46,28 +43,30 @@
 
 <h2>📊 NIFTY / BANKNIFTY LIVE CHART</h2>
 
-<div class="card">
-  <a class="btn"
-     href="https://www.tradingview.com/chart/?symbol=NSE:NIFTY"
-     target="_blank">
-     Open NIFTY Live Chart
-  </a>
+<button onclick="openChart('NIFTY')">
+  Open NIFTY Live Chart
+</button>
 
-  <a class="btn"
-     href="https://www.tradingview.com/chart/?symbol=NSE:BANKNIFTY"
-     target="_blank">
-     Open BANKNIFTY Live Chart
-  </a>
+<button onclick="openChart('BANKNIFTY')">
+  Open BANKNIFTY Live Chart
+</button>
+
+<div class="note">
+  Chart opens on TradingView in a new tab.<br>
+  (Free · Live · Official)
 </div>
 
-<div class="card">
-  <h3>ℹ️ Why this works</h3>
-  <p>
-    TradingView restricts free embedding of NSE indices.<br>
-    Opening charts directly on TradingView is
-    <b>100% free, legal & reliable</b>.
-  </p>
-</div>
+<script>
+function openChart(type) {
+  let url =
+    type === 'NIFTY'
+    ? 'https://www.tradingview.com/chart/?symbol=NSE:NIFTY'
+    : 'https://www.tradingview.com/chart/?symbol=NSE:BANKNIFTY';
+
+  // This is a direct user-triggered action → not blocked
+  window.open(url, '_blank');
+}
+</script>
 
 </body>
 </html>
