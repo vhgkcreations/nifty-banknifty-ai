@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>NIFTY / BANKNIFTY AI Signals</title>
+<title>NIFTY / BANKNIFTY AI Trade Plan</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -14,15 +14,17 @@ body {
   text-align: center;
 }
 h2 { margin: 14px 0; }
-button, select {
+
+button, select, input {
   width: 90%;
   max-width: 320px;
   padding: 14px;
-  margin: 10px auto;
+  margin: 8px auto;
   font-size: 16px;
   border-radius: 10px;
   border: none;
 }
+
 button {
   background: #2563eb;
   color: white;
@@ -64,13 +66,15 @@ button:active { background:#1d4ed8; }
   <option value="BANKNIFTY">BANKNIFTY</option>
 </select>
 
-<select id="trend">
+<select id="bias">
   <option value="BULLISH">Bullish</option>
   <option value="BEARISH">Bearish</option>
   <option value="SIDEWAYS">Sideways</option>
 </select>
 
-<button onclick="generateSignal()">Generate AI Signal</button>
+<input type="number" id="spot" placeholder="Enter current index price (e.g. 22540)">
+
+<button onclick="generatePlan()">Generate Trade Plan</button>
 </div>
 
 <!-- AI OUTPUT -->
@@ -78,9 +82,12 @@ button:active { background:#1d4ed8; }
 <h3>🤖 AI Trade Plan</h3>
 
 <p>Market: <b id="o_market">--</b></p>
-<p>Trend: <b id="o_trend">--</b></p>
+<p>Bias: <b id="o_bias">--</b></p>
+<p>Strike: <b id="o_strike">--</b></p>
 <p>Action: <b id="o_action">--</b></p>
-<p>Option: <b id="o_option">--</b></p>
+<p>Entry: <b id="o_entry">--</b></p>
+<p>Stop Loss: <b id="o_sl">--</b></p>
+<p>Target: <b id="o_target">--</b></p>
 <p>Confidence: <b id="o_conf">--%</b></p>
 
 <p class="small" id="o_reason"></p>
@@ -96,31 +103,53 @@ function openChart(type){
   window.open(url,'_blank');
 }
 
-function generateSignal(){
+function roundStrike(price, step){
+  return Math.round(price / step) * step;
+}
+
+function generatePlan(){
   const market = document.getElementById("market").value;
-  const trend = document.getElementById("trend").value;
+  const bias = document.getElementById("bias").value;
+  const spot = parseFloat(document.getElementById("spot").value);
 
-  let action="WAIT", option="No Trade", conf=60, reason="Sideways market – capital protection.";
-
-  if(trend==="BULLISH"){
-    action="BUY";
-    option="ATM / 1-ITM CE";
-    conf=78;
-    reason="Higher highs expected. Momentum aligned with bullish bias.";
-  }
-  else if(trend==="BEARISH"){
-    action="SELL";
-    option="ATM / 1-ITM PE";
-    conf=78;
-    reason="Lower lows expected. Weakness continuation probable.";
+  if(!spot || bias==="SIDEWAYS"){
+    document.getElementById("o_reason").innerText =
+      "Sideways or invalid price – best action is to WAIT.";
+    return;
   }
 
-  document.getElementById("o_market").innerText=market;
-  document.getElementById("o_trend").innerText=trend;
-  document.getElementById("o_action").innerText=action;
-  document.getElementById("o_option").innerText=option;
-  document.getElementById("o_conf").innerText=conf+"%";
-  document.getElementById("o_reason").innerText=reason;
+  const step = market==="NIFTY" ? 50 : 100;
+  const atm = roundStrike(spot, step);
+
+  let strike, action, entry, sl, target, conf, reason;
+
+  if(bias==="BULLISH"){
+    strike = atm + " CE";
+    action = "BUY";
+    entry = "Above " + atm;
+    sl = (atm - step) + " (Index)";
+    target = (atm + step*2) + " (Index)";
+    conf = 80;
+    reason = "Bullish bias + ATM call offers best risk-reward.";
+  } else {
+    strike = atm + " PE";
+    action = "BUY";
+    entry = "Below " + atm;
+    sl = (atm + step) + " (Index)";
+    target = (atm - step*2) + " (Index)";
+    conf = 80;
+    reason = "Bearish bias + ATM put offers best risk-reward.";
+  }
+
+  document.getElementById("o_market").innerText = market;
+  document.getElementById("o_bias").innerText = bias;
+  document.getElementById("o_strike").innerText = strike;
+  document.getElementById("o_action").innerText = action;
+  document.getElementById("o_entry").innerText = entry;
+  document.getElementById("o_sl").innerText = sl;
+  document.getElementById("o_target").innerText = target;
+  document.getElementById("o_conf").innerText = conf + "%";
+  document.getElementById("o_reason").innerText = reason;
 }
 </script>
 
