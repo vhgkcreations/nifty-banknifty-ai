@@ -1,71 +1,63 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>NIFTY / BANKNIFTY Chart AI</title>
+  <meta charset="UTF-8">
+  <title>NIFTY / BANKNIFTY Live Chart</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="style.css">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: white;
+      text-align: center;
+    }
+
+    h2 {
+      margin: 10px 0;
+    }
+
+    select {
+      padding: 8px;
+      margin-bottom: 10px;
+      font-size: 16px;
+    }
+
+    iframe {
+      width: 100%;
+      height: 500px;
+      border: none;
+    }
+  </style>
 </head>
-  <script src="https://s3.tradingview.com/tv.js"></script>
 
 <body>
 
-<h2>📊 NIFTY / BANKNIFTY CHART AI</h2>
+<h2>📊 NIFTY / BANKNIFTY LIVE CHART</h2>
 
-<select id="symbol" onchange="loadAll()">
+<select onchange="changeChart(this.value)">
   <option value="NSE:NIFTY">NIFTY</option>
   <option value="NSE:BANKNIFTY">BANKNIFTY</option>
 </select>
 
-<div id="tv-chart"></div>
+<iframe
+  id="tvchart"
+  src="https://www.tradingview.com/widgetembed/?symbol=NSE:NIFTY&interval=5&theme=dark&style=1&timezone=Asia/Kolkata"
+  allowfullscreen>
+</iframe>
 
-<div class="card">
-  <h3 id="market">---</h3>
-  <p>Market Mood: <b id="mood"></b></p>
-  <p>Trend: <b id="trend"></b></p>
-  <p>Confidence: <b id="confidence"></b>%</p>
-  <p>Entry: <b id="entry"></b></p>
-  <p>Target: <b id="target"></b></p>
-  <p>Stop Loss: <b id="sl"></b></p>
-  <p>Option: <b id="option"></b></p>
-</div>
-
-<div class="card">
-  <h3>📈 Performance</h3>
-  <p>Signals: <span id="signals"></span></p>
-  <p>Wins: <span id="wins"></span></p>
-  <p>Losses: <span id="losses"></span></p>
-  <p>Win %: <span id="winrate"></span>%</p>
-</div>
-
-<!-- TradingView Live Chart -->
-<div class="tradingview-widget-container">
-  <div id="tradingview_chart"></div>
-  <script type="text/javascript">
-  new TradingView.widget({
-    "autosize": true,
-    "symbol": "NSE:NIFTY",
-    "interval": "5",
-    "timezone": "Asia/Kolkata",
-    "theme": "dark",
-    "style": "1",
-    "locale": "en",
-    "toolbar_bg": "#1e293b",
-    "enable_publishing": false,
-    "allow_symbol_change": true,
-    "container_id": "tradingview_chart"
-  });
-  </script>
-</div>
-
-<script src="config.js"></script>
-<script src="chart.js"></script>
-<script src="indicators.js"></script>
-<script src="mood.js"></script>
-<script src="options.js"></script>
-<script src="alerts.js"></script>
-<script src="dashboard.js"></script>
-<script src="ai-engine.js"></script>
+<script>
+function changeChart(symbol) {
+  document.getElementById("tvchart").src =
+    "https://www.tradingview.com/widgetembed/?" +
+    "symbol=" + symbol +
+    "&interval=5" +
+    "&theme=dark" +
+    "&style=1" +
+    "&timezone=Asia/Kolkata";
+}
+</script>
 
 </body>
 </html>
-
