@@ -1,160 +1,127 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>NIFTY / BANKNIFTY AI Signals</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>NIFTY / BANKNIFTY AI Signals</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #0f172a;
-      color: white;
-      text-align: center;
-    }
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #0f172a;
+  color: white;
+  text-align: center;
+}
+h2 { margin: 14px 0; }
+button, select {
+  width: 90%;
+  max-width: 320px;
+  padding: 14px;
+  margin: 10px auto;
+  font-size: 16px;
+  border-radius: 10px;
+  border: none;
+}
+button {
+  background: #2563eb;
+  color: white;
+}
+button:active { background:#1d4ed8; }
 
-    h2 {
-      margin: 16px 0;
-    }
+.card {
+  background:#1e293b;
+  margin:15px;
+  padding:16px;
+  border-radius:14px;
+  max-width:420px;
+  margin-left:auto;
+  margin-right:auto;
+  text-align:left;
+}
 
-    button {
-      display: block;
-      width: 90%;
-      max-width: 320px;
-      margin: 12px auto;
-      padding: 16px;
-      font-size: 18px;
-      border: none;
-      border-radius: 12px;
-      background: #2563eb;
-      color: white;
-      cursor: pointer;
-    }
-
-    button:active {
-      background: #1d4ed8;
-    }
-
-    .card {
-      background: #1e293b;
-      margin: 14px;
-      padding: 16px;
-      border-radius: 14px;
-      text-align: left;
-      max-width: 420px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    .bullish { color: #22c55e; }
-    .bearish { color: #ef4444; }
-    .neutral { color: #facc15; }
-
-    .small {
-      font-size: 14px;
-      opacity: 0.8;
-    }
-  </style>
+.green { color:#22c55e; }
+.red { color:#ef4444; }
+.yellow { color:#facc15; }
+.small { font-size:13px; opacity:0.8; }
+</style>
 </head>
 
 <body>
 
 <h2>📊 NIFTY / BANKNIFTY AI</h2>
 
-<!-- OPEN TRADINGVIEW BUTTONS -->
-<button onclick="openChart('NIFTY')">
-  Open NIFTY Live Chart
-</button>
+<!-- OPEN TRADINGVIEW -->
+<button onclick="openChart('NIFTY')">Open NIFTY Live Chart</button>
+<button onclick="openChart('BANKNIFTY')">Open BANKNIFTY Live Chart</button>
 
-<button onclick="openChart('BANKNIFTY')">
-  Open BANKNIFTY Live Chart
-</button>
-
-<!-- AI SIGNAL CARD -->
+<!-- USER INPUT -->
 <div class="card">
-  <h3>🤖 AI Trade Signal</h3>
+<h3>🧠 Market Input</h3>
 
-  <p>
-    Market: <b id="market">NIFTY</b><br>
-    Trend: <b id="trend" class="neutral">WAIT</b><br>
-    Action: <b id="action">No Trade</b><br>
-    Confidence: <b id="confidence">--%</b>
-  </p>
+<select id="market">
+  <option value="NIFTY">NIFTY</option>
+  <option value="BANKNIFTY">BANKNIFTY</option>
+</select>
 
-  <hr>
+<select id="trend">
+  <option value="BULLISH">Bullish</option>
+  <option value="BEARISH">Bearish</option>
+  <option value="SIDEWAYS">Sideways</option>
+</select>
 
-  <p>
-    Option Suggestion:<br>
-    <b id="option">--</b>
-  </p>
-
-  <p class="small">
-    Strategy: ATM / 1-ITM option buying<br>
-    Timeframe: 5-min confirmation
-  </p>
+<button onclick="generateSignal()">Generate AI Signal</button>
 </div>
 
-<div class="small" style="margin-bottom:20px;">
-  Educational & decision-support only
+<!-- AI OUTPUT -->
+<div class="card">
+<h3>🤖 AI Trade Plan</h3>
+
+<p>Market: <b id="o_market">--</b></p>
+<p>Trend: <b id="o_trend">--</b></p>
+<p>Action: <b id="o_action">--</b></p>
+<p>Option: <b id="o_option">--</b></p>
+<p>Confidence: <b id="o_conf">--%</b></p>
+
+<p class="small" id="o_reason"></p>
 </div>
+
+<p class="small">Educational & decision-support only</p>
 
 <script>
-/* ---------- OPEN TRADINGVIEW ---------- */
-function openChart(type) {
-  const url =
-    type === 'NIFTY'
-      ? 'https://www.tradingview.com/chart/?symbol=NSE:NIFTY'
-      : 'https://www.tradingview.com/chart/?symbol=NSE:BANKNIFTY';
-
-  window.open(url, '_blank');
+function openChart(type){
+  const url = type==="NIFTY"
+    ? "https://www.tradingview.com/chart/?symbol=NSE:NIFTY"
+    : "https://www.tradingview.com/chart/?symbol=NSE:BANKNIFTY";
+  window.open(url,'_blank');
 }
 
-/* ---------- SIMPLE AI ENGINE ---------- */
-function generateSignal() {
-  // Mocked indicator logic (upgrade later with real data)
-  const rsi = 30 + Math.random() * 40;     // 30–70
-  const trendStrength = Math.random();    // 0–1
+function generateSignal(){
+  const market = document.getElementById("market").value;
+  const trend = document.getElementById("trend").value;
 
-  let trend = "WAIT";
-  let action = "No Trade";
-  let option = "No Trade";
-  let confidence = 50;
+  let action="WAIT", option="No Trade", conf=60, reason="Sideways market – capital protection.";
 
-  if (rsi > 55 && trendStrength > 0.6) {
-    trend = "BULLISH";
-    action = "BUY CALL (CE)";
-    option = "ATM or 1-ITM CE";
-    confidence = 75 + Math.floor(Math.random() * 10);
+  if(trend==="BULLISH"){
+    action="BUY";
+    option="ATM / 1-ITM CE";
+    conf=78;
+    reason="Higher highs expected. Momentum aligned with bullish bias.";
   }
-  else if (rsi < 45 && trendStrength > 0.6) {
-    trend = "BEARISH";
-    action = "BUY PUT (PE)";
-    option = "ATM or 1-ITM PE";
-    confidence = 75 + Math.floor(Math.random() * 10);
-  }
-  else {
-    trend = "SIDEWAYS";
-    action = "WAIT";
-    option = "Avoid Trading";
-    confidence = 55;
+  else if(trend==="BEARISH"){
+    action="SELL";
+    option="ATM / 1-ITM PE";
+    conf=78;
+    reason="Lower lows expected. Weakness continuation probable.";
   }
 
-  const trendEl = document.getElementById("trend");
-  trendEl.innerText = trend;
-  trendEl.className =
-    trend === "BULLISH" ? "bullish" :
-    trend === "BEARISH" ? "bearish" :
-    "neutral";
-
-  document.getElementById("action").innerText = action;
-  document.getElementById("option").innerText = option;
-  document.getElementById("confidence").innerText = confidence + "%";
+  document.getElementById("o_market").innerText=market;
+  document.getElementById("o_trend").innerText=trend;
+  document.getElementById("o_action").innerText=action;
+  document.getElementById("o_option").innerText=option;
+  document.getElementById("o_conf").innerText=conf+"%";
+  document.getElementById("o_reason").innerText=reason;
 }
-
-/* ---------- AUTO UPDATE EVERY 30s ---------- */
-generateSignal();
-setInterval(generateSignal, 30000);
 </script>
 
 </body>
