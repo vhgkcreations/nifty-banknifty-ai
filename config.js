@@ -1,0 +1,2 @@
+const REFRESH_TIME = 30000;
+const MIN_CONFIDENCE = 70;
