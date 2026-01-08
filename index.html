@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="style.css">
 </head>
+  <script src="https://s3.tradingview.com/tv.js"></script>
+
 <body>
 
 <h2>📊 NIFTY / BANKNIFTY CHART AI</h2>
@@ -35,7 +37,26 @@
   <p>Win %: <span id="winrate"></span>%</p>
 </div>
 
-<script src="https://s3.tradingview.com/tv.js"></script>
+<!-- TradingView Live Chart -->
+<div class="tradingview-widget-container">
+  <div id="tradingview_chart"></div>
+  <script type="text/javascript">
+  new TradingView.widget({
+    "autosize": true,
+    "symbol": "NSE:NIFTY",
+    "interval": "5",
+    "timezone": "Asia/Kolkata",
+    "theme": "dark",
+    "style": "1",
+    "locale": "en",
+    "toolbar_bg": "#1e293b",
+    "enable_publishing": false,
+    "allow_symbol_change": true,
+    "container_id": "tradingview_chart"
+  });
+  </script>
+</div>
+
 <script src="config.js"></script>
 <script src="chart.js"></script>
 <script src="indicators.js"></script>
@@ -47,3 +68,4 @@
 
 </body>
 </html>
+
